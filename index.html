@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantForge IO | System Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>QuantForge.IO | Terminal</title>
+    <!-- استفاده از فونت مخصوص برنامه‌نویسی -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg: #050505;
-            --cyan: #00ffcc;
-            --purple: #b300ff;
-            --text-main: #ffffff;
-            --text-dim: #8892b0;
+            --bg-color: #050505;
+            --term-green: #00ff41;
+            --term-dark-green: #008f11;
         }
 
         * {
@@ -22,306 +21,221 @@
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Space Grotesk', sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* Canvas Background */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            opacity: 0.6;
-            pointer-events: none; /* Let clicks pass through */
-        }
-
-        /* Main Content Container */
-        .content {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Glitch Logo */
-        nav {
-            padding: 2rem 5%;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .logo {
+            background-color: var(--bg-color);
+            color: var(--term-green);
             font-family: 'Fira Code', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-main);
-            position: relative;
-        }
-        .logo span { color: var(--cyan); }
-
-        /* Hero Terminal Section */
-        .hero {
-            flex-grow: 1;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 0 20px;
+            overflow: hidden;
+            position: relative;
         }
 
-        .status-badge {
-            background: rgba(0, 255, 204, 0.1);
-            border: 1px solid rgba(0, 255, 204, 0.3);
-            color: var(--cyan);
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.8rem;
-            margin-bottom: 2rem;
-            letter-spacing: 1px;
-            animation: pulse 2s infinite;
+        /* افکت خطوط مانیتورهای قدیمی (CRT Scanlines) */
+        body::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
         }
 
-        h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 700;
-            line-height: 1;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to right, #fff, var(--text-dim));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .terminal-window {
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            background: #0a0a0a;
+            border: 1px solid var(--term-dark-green);
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
         }
 
-        p.subtitle {
-            font-size: 1.2rem;
-            color: var(--text-dim);
-            max-width: 600px;
-            margin-bottom: 3rem;
+        .terminal-header {
+            background: var(--term-dark-green);
+            color: var(--bg-color);
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+            font-size: 1rem;
             line-height: 1.6;
         }
 
-        /* Cyber Buttons */
-        .actions {
-            display: flex;
-            gap: 20px;
+        /* چشمک‌زن کرسر (Blinking Cursor) */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: var(--term-green);
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
         }
 
-        .cyber-btn {
-            position: relative;
-            padding: 15px 40px;
-            background: transparent;
-            color: var(--cyan);
-            font-family: 'Fira Code', monospace;
-            font-size: 1rem;
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .command-link {
+            color: var(--term-green);
             text-decoration: none;
-            border: 1px solid var(--cyan);
-            overflow: hidden;
-            transition: 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            border: 1px solid var(--term-dark-green);
+            padding: 5px 15px;
+            margin-top: 10px;
+            display: inline-block;
+            transition: all 0.2s;
+            cursor: pointer;
         }
 
-        .cyber-btn:hover {
-            background: var(--cyan);
-            color: var(--bg);
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+        .command-link:hover {
+            background: var(--term-green);
+            color: var(--bg-color);
+            box-shadow: 0 0 10px var(--term-green);
         }
 
-        .cyber-btn-secondary {
-            border-color: var(--purple);
-            color: var(--purple);
+        /* استایل‌های متن */
+        .log-time { color: #888; margin-right: 10px; }
+        .log-success { color: var(--term-green); }
+        .log-warning { color: #ffb000; }
+        .ascii-art {
+            white-space: pre;
+            font-size: clamp(0.5rem, 1.5vw, 1rem);
+            margin: 20px 0;
+            color: var(--term-green);
+            text-shadow: 0 0 5px var(--term-green);
         }
 
-        .cyber-btn-secondary:hover {
-            background: var(--purple);
-            color: var(--text-main);
-            box-shadow: 0 0 20px rgba(179, 0, 255, 0.5);
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 255, 204, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
-        }
-
-        /* Responsive */
         @media (max-width: 600px) {
-            .actions { flex-direction: column; width: 100%; max-width: 300px; }
-            .cyber-btn { text-align: center; }
+            .terminal-body { padding: 10px; font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Interactive Background -->
-    <canvas id="particle-canvas"></canvas>
-
-    <!-- UI Overlay -->
-    <div class="content">
-        <nav>
-            <div class="logo">Quant<span>Forge</span>_</div>
-        </nav>
-
-        <main class="hero">
-            <div class="status-badge">● SYSTEM ONLINE // V.1.0</div>
-            <h1>ALGORITHMIC<br>PRECISION</h1>
-            <p class="subtitle">Engineering institutional-grade quantitative strategies. Merging Smart Money Concepts with high-frequency execution architecture.</p>
-            
-            <div class="actions">
-                <a href="https://github.com/SBSamurai" class="cyber-btn">Initialize_Git</a>
-                <a href="mailto:admin@quantforgeio.com" class="cyber-btn cyber-btn-secondary">Ping_Admin</a>
-            </div>
-        </main>
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <span>root@quantforge:~</span>
+            <span>[ _ □ X ]</span>
+        </div>
+        <div class="terminal-body" id="console">
+            <!-- محتوای ترمینال با جاوا اسکریپت در اینجا تایپ می‌شود -->
+        </div>
     </div>
 
-    <!-- The Magic Script for Interactive Particles -->
     <script>
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
+        const consoleDiv = document.getElementById('console');
         
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // لاگ‌های بوت شدن سیستم
+        const bootSequence = [
+            "<span class='log-time'>[00:00:01]</span> INITIALIZING QUANTFORGE.IO CORE...",
+            "<span class='log-time'>[00:00:02]</span> BYPASSING MAINFRAME FIREWALL... <span class='log-success'>[OK]</span>",
+            "<span class='log-time'>[00:00:03]</span> LOADING HIGH-FREQUENCY TRADING MODULES...",
+            "<span class='log-time'>[00:00:04]</span> ESTABLISHING CONNECTION TO MARKET DATA... <span class='log-warning'>[ENCRYPTED]</span>",
+            "<span class='log-time'>[00:00:05]</span> ACCESS GRANTED.",
+            "<br>"
+        ];
 
-        let particlesArray;
+        // اسکی آرت (متن هنری)
+        const asciiArt = `
+  ____                    _   _____                       
+ / __ \\                  | | |  ___|                      
+| |  | |_   _ __ _ _ __  | |_| |_ ___  _ __ __ _  ___ 
+| |  | | | | / _\` | '_ \\ | __|  _/ _ \\| '__/ _\` |/ _ \\
+| |__| | |_| | (_| | | | | |_| || (_) | | | (_| |  __/
+ \\___\\_\\\\__,_|\\__,_|_| |_|\\__\\_| \\___/|_|  \\__, |\\___|
+                                            __/ |     
+                                           |___/      
+`;
 
-        // Mouse position
-        let mouse = {
-            x: null,
-            y: null,
-            radius: (canvas.height/80) * (canvas.width/80)
-        }
+        const mainContent = `
+STATUS: SYSTEM ONLINE
+VERSION: 2.0.1 (ALGORITHMIC PRECISION)
+AUTHOR: QUANTITATIVE DEVELOPER
+SPECIALTY: SMART MONEY CONCEPTS (SMC) & HFT ARCHITECTURE
+<br><br>
+AVAILABLE COMMANDS:
+<br>
+<a href="https://github.com/SBSamurai" class="command-link">> execute --target github</a>
+<br>
+<a href="mailto:admin@quantforgeio.com" class="command-link">> execute --target email</a>
+`;
 
-        window.addEventListener('mousemove',
-            function(event) {
-                mouse.x = event.x;
-                mouse.y = event.y;
-            }
-        );
+        let currentLine = 0;
 
-        class Particle {
-            constructor(x, y, directionX, directionY, size, color) {
-                this.x = x;
-                this.y = y;
-                this.directionX = directionX;
-                this.directionY = directionY;
-                this.size = size;
-                this.color = color;
-            }
-            // Draw particle
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = '#00ffcc';
-                ctx.fill();
-            }
-            // Update particle position & interactivity
-            update() {
-                if (this.x > canvas.width || this.x < 0) {
-                    this.directionX = -this.directionX;
-                }
-                if (this.y > canvas.height || this.y < 0) {
-                    this.directionY = -this.directionY;
-                }
-
-                // Collision detection with mouse
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx*dx + dy*dy);
+        // تابع برای تایپ کردن لاگ‌های اولیه
+        function typeBootSequence() {
+            if (currentLine < bootSequence.length) {
+                const p = document.createElement('div');
+                p.innerHTML = bootSequence[currentLine];
+                consoleDiv.appendChild(p);
+                currentLine++;
+                // اسکرول خودکار به پایین
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
                 
-                if (distance < mouse.radius + this.size){
-                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
-                        this.x += 3;
-                    }
-                    if (mouse.x > this.x && this.x > this.size * 10) {
-                        this.x -= 3;
-                    }
-                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
-                        this.y += 3;
-                    }
-                    if (mouse.y > this.y && this.y > this.size * 10) {
-                        this.y -= 3;
-                    }
-                }
-                
-                this.x += this.directionX;
-                this.y += this.directionY;
-                this.draw();
+                // زمان تصادفی برای تایپ خط بعدی (بین 100 تا 600 میلی‌ثانیه)
+                setTimeout(typeBootSequence, Math.random() * 500 + 100);
+            } else {
+                setTimeout(showMainContent, 500);
             }
         }
 
-        // Create particle network
-        function init() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 9000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 1) - 0.5;
-                let directionY = (Math.random() * 1) - 0.5;
-                let color = '#00ffcc';
-                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+        // تابع برای نمایش محتوای اصلی با افکت تایپ سریع
+        function showMainContent() {
+            // نمایش لوگو به صورت یکجا
+            const asciiDiv = document.createElement('div');
+            asciiDiv.className = 'ascii-art';
+            asciiDiv.innerHTML = asciiArt;
+            consoleDiv.appendChild(asciiDiv);
+
+            // ایجاد نگهدارنده برای متن اصلی
+            const contentDiv = document.createElement('div');
+            consoleDiv.appendChild(contentDiv);
+
+            // ایجاد کرسر چشمک‌زن
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            consoleDiv.appendChild(cursor);
+
+            let charIndex = 0;
+            // تایپ کردن متن اصلی به صورت کاراکتر به کاراکتر
+            function typeContent() {
+                // چون HTML داریم (مثل تگ های لینک و br) نمیتونیم ساده تایپ کنیم.
+                // برای سادگی و زیبایی، متن اصلی رو یکجا ظاهر میکنیم ولی با یک تاخیر کوتاه
+                contentDiv.innerHTML = mainContent;
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
             }
+
+            setTimeout(typeContent, 500);
         }
 
-        // Connect particles with lines
-        function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
-                    + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width/7) * (canvas.height/7)) {
-                        opacityValue = 1 - (distance/20000);
-                        ctx.strokeStyle = 'rgba(0, 255, 204,' + opacityValue + ')';
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0,0,innerWidth, innerHeight);
-            
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-            }
-            connect();
-        }
-
-        // Resize event
-        window.addEventListener('resize',
-            function() {
-                canvas.width = innerWidth;
-                canvas.height = innerHeight;
-                mouse.radius = ((canvas.height/80) * (canvas.height/80));
-                init();
-            }
-        );
-
-        window.addEventListener('mouseout',
-            function() {
-                mouse.x = undefined;
-                mouse.y = undefined;
-            }
-        );
-
-        init();
-        animate();
+        // شروع انیمیشن
+        window.onload = () => {
+            setTimeout(typeBootSequence, 500);
+        };
     </script>
-
 </body>
 </html>
