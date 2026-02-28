@@ -3,63 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantForge.IO | Algorithmic Trading</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-    
+    <title>QuantForge IO | Next-Gen Algorithmic Trading</title>
+    <!-- استفاده از فونت مدرن و تکنولوژیک Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #ffffff;
-            --text: #1a1a1a;
-            --accent: #2563eb; /* Royal Blue */
-            --accent-gradient: linear-gradient(135deg, #2563eb 0%, #9333ea 100%);
-        }
-
-        /* Dark Mode Support (Automatic) */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0f172a;
-                --text: #f8fafc;
-                --accent: #60a5fa;
-            }
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --cyan: #00f2fe;
+            --purple: #4facfe;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
+            color: #ffffff;
             overflow-x: hidden;
-            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
         }
 
-        /* Navigation */
+        /* Ambient Holographic Background Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            animation: float 15s infinite alternate ease-in-out;
+            opacity: 0.6;
+        }
+
+        .orb-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(79,172,254,0.4) 0%, rgba(0,0,0,0) 70%);
+        }
+
+        .orb-2 {
+            bottom: 10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(0,242,254,0.3) 0%, rgba(0,0,0,0) 70%);
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.2); }
+        }
+
+        /* Glassmorphism Navigation */
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(var(--bg), 0.8);
-            backdrop-filter: blur(10px); /* Glass effect header */
+            padding: 20px 5%;
+            background: rgba(5, 5, 5, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            width: 100%;
             z-index: 100;
         }
 
         .logo {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
         }
 
         /* Hero Section */
-        header {
+        .hero {
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -67,220 +94,192 @@
             align-items: center;
             text-align: center;
             padding: 0 20px;
-            background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
+            position: relative;
         }
 
-        h1 {
-            font-size: clamp(3rem, 10vw, 5rem);
-            font-weight: 800;
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
             line-height: 1.1;
             margin-bottom: 20px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s forwards 0.5s;
+            font-weight: 900;
+            text-shadow: 0 0 40px rgba(0, 242, 254, 0.3);
+            letter-spacing: -2px;
         }
 
-        p.lead {
-            font-size: clamp(1.1rem, 4vw, 1.5rem);
-            max-width: 700px;
+        .hero p {
+            font-size: 1.2rem;
+            color: #a1a1aa;
+            max-width: 600px;
             margin-bottom: 40px;
-            color: #64748b; /* Slate-500 */
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s forwards 0.8s;
+            font-weight: 300;
+            line-height: 1.6;
         }
 
-        /* Buttons */
-        .btn-group {
-            display: flex;
-            gap: 20px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s forwards 1.1s;
-        }
-
+        /* Glowing Neon Button */
         .btn {
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: var(--accent-gradient);
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 500;
             color: white;
-            box-shadow: 0 10px 20px -10px rgba(37, 99, 235, 0.5);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--cyan), var(--purple));
+            border: none;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
         }
 
-        .btn-primary:hover {
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 30px;
+            background: linear-gradient(45deg, var(--cyan), var(--purple));
+            filter: blur(15px);
+            z-index: -1;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 30px -10px rgba(37, 99, 235, 0.7);
         }
 
-        .btn-outline {
-            border: 2px solid #cbd5e1; /* Slate-300 */
-            color: var(--text);
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .btn-outline { border-color: #334155; }
-        }
-
-        .btn-outline:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* Features Section (Scroll Reveal) */
-        section {
-            padding: 100px 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .feature-card {
-            padding: 40px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0,0,0,0.1);
-            transition: 0.3s;
-            opacity: 0; /* Hidden initially for scroll reveal */
-            transform: translateY(50px);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .feature-card {
-                background: rgba(255, 255, 255, 0.03);
-                border: 1px solid rgba(255,255,255,0.1);
-            }
-        }
-
-        .feature-card.visible {
+        .btn:hover::before {
             opacity: 1;
-            transform: translateY(0);
+            filter: blur(20px);
         }
 
-        .feature-card h3 {
+        /* Glass Cards Section */
+        .cards-container {
+            display: flex;
+            gap: 30px;
+            padding: 50px 5% 100px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Individual Glass Card */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            width: 350px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.15);
+        }
+
+        .card h3 {
             font-size: 1.5rem;
             margin-bottom: 15px;
+            background: linear-gradient(to right, #fff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transform: translateZ(30px); /* 3D effect for text */
         }
 
-        .feature-card p {
-            color: #64748b;
+        .card p {
+            color: #a1a1aa;
+            line-height: 1.6;
+            font-weight: 300;
+            transform: translateZ(20px); /* 3D effect for text */
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 50px 20px;
-            font-size: 0.9rem;
-            color: #64748b;
-            border-top: 1px solid rgba(0,0,0,0.1);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            footer { border-top: 1px solid rgba(255,255,255,0.1); }
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Scroll Down Indicator */
-        .scroll-down {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-            opacity: 0.5;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-            40% {transform: translateX(-50%) translateY(-10px);}
-            60% {transform: translateX(-50%) translateY(-5px);}
+        /* Grid Background Pattern */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            pointer-events: none;
         }
 
     </style>
 </head>
 <body>
 
+    <!-- Background Elements -->
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
     <nav>
         <div class="logo">QuantForge.IO</div>
-        <!-- Simple link to email for now -->
-        <a href="mailto:admin@quantforgeio.com" style="text-decoration: none; font-weight: 500; color: var(--text);">Contact</a>
+        <div style="color: #a1a1aa; font-weight: 300; font-size: 0.9rem; border: 1px solid var(--glass-border); padding: 5px 15px; border-radius: 20px;">v1.0.0 Alpha</div>
     </nav>
 
-    <header>
-        <h1>Institutional<br>Algorithmic Trading.</h1>
-        <p class="lead">Bridging the gap between retail execution and high-frequency institutional strategies. Powered by advanced quantitative analysis.</p>
-        
-        <div class="btn-group">
-            <a href="https://github.com/SBSamurai" class="btn btn-primary">View GitHub</a>
-            <a href="#features" class="btn btn-outline">Explore More</a>
+    <section class="hero">
+        <h1>Precision <br> in Every Trade.</h1>
+        <p>Advanced algorithmic architecture merging deep quantitative research with sub-millisecond execution for the modern financial landscape.</p>
+        <a href="https://github.com/SBSamurai" class="btn">View Capabilities</a>
+    </section>
+
+    <section class="cards-container">
+        <!-- Card 1 -->
+        <div class="card">
+            <h3>Alpha Generation</h3>
+            <p>Proprietary machine learning models continuously parsing market inefficiencies to extract sustainable alpha across diverse assets.</p>
         </div>
-
-        <div class="scroll-down">↓</div>
-    </header>
-
-    <section id="features">
-        <div class="feature-grid">
-            <div class="feature-card">
-                <h3>Smart Money Concepts</h3>
-                <p>Leveraging institutional order flow analysis to identify liquidity pools and market maker intent.</p>
-            </div>
-            <div class="feature-card">
-                <h3>High Frequency</h3>
-                <p>Low-latency execution architecture designed for precision entries and exits in volatile markets.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Quantitative Models</h3>
-                <p>Data-driven strategies backed by rigorous backtesting and statistical validation.</p>
-            </div>
+        <!-- Card 2 -->
+        <div class="card">
+            <h3>Risk Architecture</h3>
+            <p>Dynamic hedging and real-time portfolio optimization ensuring strict drawdown parameters and ultimate capital preservation.</p>
+        </div>
+        <!-- Card 3 -->
+        <div class="card">
+            <h3>Deep Liquidity</h3>
+            <p>Direct market access and smart order routing fragmented across top-tier centralized exchanges and decentralized dark pools.</p>
         </div>
     </section>
 
-    <footer>
-        &copy; 2026 QuantForge.IO | All Rights Reserved.
-    </footer>
-
     <script>
-        // Scroll Reveal Animation Script
-        const cards = document.querySelectorAll('.feature-card');
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    // Add delay based on index for staggered effect
-                    setTimeout(() => {
-                        entry.target.classList.add('visible');
-                    }, index * 200); // 200ms delay between cards
-                    observer.unobserve(entry.target); // Only animate once
-                }
-            });
-        }, {
-            threshold: 0.1
-        });
-
+        // Vanilla JavaScript 3D Tilt Effect
+        const cards = document.querySelectorAll('.card');
+        
         cards.forEach(card => {
-            observer.observe(card);
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate rotation based on mouse position
+                const rotateX = ((y - centerY) / centerY) * -15; // Max 15 degrees
+                const rotateY = ((x - centerX) / centerX) * 15;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                // Reset to original position
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+                card.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)'; // Smooth snap back
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none'; // Remove transition during mouse movement for zero lag
+            });
         });
     </script>
-
 </body>
 </html>
