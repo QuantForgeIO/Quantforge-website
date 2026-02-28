@@ -28,26 +28,23 @@
             min-height: 100vh;
         }
 
-        /* --- قسمت اصلاح شده چارت پس‌زمینه --- */
+        /* --- چارت پس‌زمینه دقیقاً فیکس صفحه شد --- */
         .chart-bg {
             position: fixed;
-            /* کمی چارت رو بزرگتر از صفحه میکنیم تا محور قیمت و زمان (اعداد اطراف) برن بیرون کادر و فقط کندل‌ها بمونن */
-            top: -5vh; 
-            left: -5vw;
-            width: 110vw;
-            height: 110vh;
+            top: 0; /* صفر شد تا از بالا دقیق شروع شود */
+            left: 0; /* صفر شد تا نوار قیمت سمت راست کامل دیده شود */
+            width: 100vw; /* دقیقاً هم‌عرض صفحه */
+            height: 100vh; /* دقیقاً هم‌ارتفاع صفحه برای دیدن نوار زمان در پایین */
             z-index: -4;
             opacity: 0.85; 
-            pointer-events: none; /* تا موس روی چارت گیر نکنه و بشه روی سایت اسکرول کرد */
+            pointer-events: none; /* تا موس روی چارت گیر نکنه */
         }
 
-        /* این دو تا کلاس حتماً باید ۱۰۰٪ باشن تا چارت مچاله نشه */
         .tradingview-widget-container, 
         #tradingview_bg {
             width: 100% !important;
             height: 100% !important;
         }
-        /* ------------------------------------- */
 
         .orb {
             position: absolute;
@@ -230,7 +227,6 @@
 </head>
 <body>
 
-    <!-- چارت لایو پس‌زمینه -->
     <div class="chart-bg">
         <div class="tradingview-widget-container">
             <div id="tradingview_bg"></div>
@@ -263,10 +259,8 @@
         </div>
     </div>
 
-    <!-- هاله تاریک کننده لبه‌ها -->
     <div class="overlay"></div>
 
-    <!-- افکت‌های نوری -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
 
@@ -297,7 +291,6 @@
     </section>
 
     <script>
-        // افکت چرخش سه‌بعدی کارت‌ها
         const cards = document.querySelectorAll('.card');
         
         cards.forEach(card => {
