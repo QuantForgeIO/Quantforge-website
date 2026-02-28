@@ -3,107 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantForge IO | Algorithmic Trading</title>
+    <title>QuantForge IO | Advanced Algorithmic Trading</title>
+    
+    <!-- Google Fonts: Inter for UI, Fira Code for Tech Vibe -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --bg-color: #030305;
+            --text-main: #f0f0f0;
+            --text-muted: #94a3b8;
+            --primary-cyan: #00f0ff;
+            --primary-purple: #8a2be2;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
         body {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(138, 43, 226, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.08), transparent 25%);
         }
-        header {
-            background-color: #161b22;
-            padding: 60px 20px;
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            font-family: 'Fira Code', monospace;
+            color: var(--primary-cyan);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            border-bottom: 2px solid #238636;
-        }
-        h1 {
-            color: #58a6ff;
-            margin: 0;
-            font-size: 3.5em;
-            letter-spacing: 2px;
-        }
-        p.tagline {
-            color: #8b949e;
-            font-size: 1.2em;
-            margin-top: 10px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
             padding: 0 20px;
+            animation: fadeIn 1.5s ease-out;
         }
-        .box {
-            background-color: #161b22;
-            padding: 25px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        h2 {
-            color: #58a6ff;
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 10px;
-            margin-top: 0;
+
+        .hero h1 .highlight {
+            background: linear-gradient(to right, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
         }
-        li {
-            background: #21262d;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 4px solid #58a6ff;
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
         }
+
         .btn {
-            display: inline-block;
-            background-color: #238636;
-            color: white;
-            padding: 12px 25px;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 15px;
-            margin-right: 10px;
+            transition: all 0.3s ease;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
         }
-        .btn:hover {
-            background-color: #2ea043;
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-purple), var(--primary-cyan));
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Features Section (Glassmorphism Cards) */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(16px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cta-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+            .btn { text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>QuantForge IO</h1>
-        <p class="tagline">Engineering the Future of Algorithmic Trading</p>
+    <nav>
+        <div class="logo">
+            QUANT<span>FORGE</span>
+        </div>
+        <!-- You can add menu links here later -->
+    </nav>
+
+    <header class="hero">
+        <h1>Engineering the Future of <br><span class="highlight">Algorithmic Trading</span></h1>
+        <p>Advanced quantitative systems, Smart Money Concepts (SMC), and data-driven architectures for modern financial markets.</p>
+        
+        <div class="cta-buttons">
+            <a href="https://github.com/SBSamurai" target="_blank" class="btn btn-primary">View GitHub</a>
+            <a href="mailto:admin@quantforgeio.com" class="btn btn-secondary">Contact Me</a>
+        </div>
     </header>
 
-    <div class="container">
-        <div class="box">
-            <h2>About Us</h2>
-            <p>QuantForge IO specializes in building high-performance algorithmic trading systems, custom indicators, and automated strategies. We bridge the gap between advanced quantitative analysis and practical market execution.</p>
+    <section class="features">
+        <div class="card">
+            <div class="card-icon">🤖</div>
+            <h3>Algo Systems</h3>
+            <p>Building high-performance automated trading bots using Python and C# (cTrader) with robust risk management protocols.</p>
         </div>
+        
+        <div class="card">
+            <div class="card-icon">📊</div>
+            <h3>Smart Structure</h3>
+            <p>Integrating advanced Smart Money Concepts (SMC) and institutional order flow into executable algorithmic logic.</p>
+        </div>
+        
+        <div class="card">
+            <div class="card-icon">⚡</div>
+            <h3>Data Analytics</h3>
+            <p>Deep market analysis, backtesting infrastructure, and optimization techniques to ensure strategy edge and durability.</p>
+        </div>
+    </section>
 
-        <div class="box">
-            <h2>Our Core Expertise</h2>
-            <ul>
-                <li><strong>cTrader / C#</strong> : Advanced cBots, Custom Indicators, and FIX API integration.</li>
-                <li><strong>TradingView / Pine Script</strong> : Complex logic, custom alerts, and strategy backtesting.</li>
-                <li><strong>MetaTrader / MQL4 & MQL5</strong> : Robust Expert Advisors (EAs) and technical tools.</li>
-            </ul>
-        </div>
-
-        <div class="box">
-            <h2>Connect & Contact</h2>
-            <p>Ready to automate your trading edge or discuss a new project?</p>
-            <a href="#" class="btn" style="background-color: #0a66c2;">LinkedIn</a>
-            <a href="#" class="btn" style="background-color: #24292f; border: 1px solid #c9d1d9;">GitHub</a>
-        </div>
-    </div>
+    <footer>
+        <p>&copy; 2026 QuantForge IO. All rights reserved. | <span style="color: var(--primary-cyan)">System.Online()</span></p>
+    </footer>
 
 </body>
 </html>
