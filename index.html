@@ -12,6 +12,7 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --cyan: #00f2fe;
             --purple: #4facfe;
+            --nav-height: 75px; /* ارتفاع دقیق منو */
         }
 
         * {
@@ -28,22 +29,82 @@
             min-height: 100vh;
         }
 
-        /* --- حل مشکل بیرون زدن چارت در دسکتاپ --- */
-        .chart-bg {
+        /* --- منوی بالایی فیکس شد --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--nav-height);
+            padding: 0 5%;
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
             position: fixed;
             top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        /* --- بج‌های هدر (نشانگر لایو بیت‌کوین و ورژن) --- */
+        .nav-badges {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .badge {
+            color: #e4e4e7;
+            font-weight: 500;
+            font-size: 0.85rem;
+            border: 1px solid var(--glass-border);
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: rgba(20, 20, 25, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981; /* سبز روشن */
+            border-radius: 50%;
+            box-shadow: 0 0 12px #10b981;
+            animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.3); }
+        }
+
+        /* --- تنظیم دقیق چارت برای جلوگیری از رفتن زیر منو --- */
+        .chart-bg {
+            position: fixed;
+            top: var(--nav-height); /* شروع چارت دقیقاً از زیر منو */
             left: 0;
             right: 0;
             bottom: 0;
-            width: 100%; /* استفاده از درصد به جای vw */
-            height: 100%; /* استفاده از درصد به جای vh */
+            width: 100%;
+            height: calc(100vh - var(--nav-height)); /* کسر کردن ارتفاع منو از کل صفحه */
             z-index: -4;
             opacity: 0.85; 
             pointer-events: none;
-            overflow: hidden; /* جلوگیری از هرگونه بیرون‌زدگی */
+            overflow: hidden;
         }
 
-        /* استفاده از Flexbox برای فیکس کردن دقیق فریم TradingView */
         .tradingview-widget-container {
             display: flex;
             flex-direction: column;
@@ -56,8 +117,8 @@
             width: 100%;
             height: 100%;
         }
-        /* ---------------------------------------- */
 
+        /* --- افکت‌های گرافیکی پس‌زمینه --- */
         .orb {
             position: absolute;
             border-radius: 50%;
@@ -69,18 +130,12 @@
         }
 
         .orb-1 {
-            top: -10%;
-            left: -10%;
-            width: 50vw;
-            height: 50vw;
+            top: -10%; left: -10%; width: 50vw; height: 50vw;
             background: radial-gradient(circle, rgba(79,172,254,0.3) 0%, rgba(0,0,0,0) 70%);
         }
 
         .orb-2 {
-            bottom: 10%;
-            right: -10%;
-            width: 60vw;
-            height: 60vw;
+            bottom: 10%; right: -10%; width: 60vw; height: 60vw;
             background: radial-gradient(circle, rgba(0,242,254,0.2) 0%, rgba(0,0,0,0) 70%);
             animation-delay: -5s;
         }
@@ -98,31 +153,10 @@
             pointer-events: none;
         }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
-            background: rgba(5, 5, 5, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--glass-border);
-            position: fixed;
-            width: 100%;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: linear-gradient(to right, var(--cyan), var(--purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
-        }
-
+        /* --- محتوای اصلی --- */
         .hero {
-            height: 100vh;
+            min-height: calc(100vh - var(--nav-height)); /* تنظیم ارتفاع هیرو با کسر منو */
+            margin-top: var(--nav-height);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -180,14 +214,8 @@
             transition: opacity 0.3s;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn:hover::before {
-            opacity: 1;
-            filter: blur(20px);
-        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:hover::before { opacity: 1; filter: blur(20px); }
 
         .cards-container {
             display: flex;
@@ -239,6 +267,17 @@
 </head>
 <body>
 
+    <nav>
+        <div class="logo">QuantForge.IO</div>
+        <!-- اضافه شدن نشانگر لایو به هدر -->
+        <div class="nav-badges">
+            <div class="badge">
+                <span class="pulse-dot"></span> LIVE: BTC/USDT
+            </div>
+            <div class="badge" style="color: #a1a1aa; font-weight: 300; background: transparent;">v1.0.0 Alpha</div>
+        </div>
+    </nav>
+
     <div class="chart-bg">
         <div class="tradingview-widget-container">
             <div id="tradingview_bg"></div>
@@ -256,16 +295,10 @@
                 "backgroundColor": "#050505", 
                 "gridColor": "rgba(0, 0, 0, 0)",
                 "hide_top_toolbar": true,
-                "hide_legend": true,
+                "hide_legend": false, /* تغییر به False تا اطلاعات روی چارت نمایش داده شود */
                 "save_image": false,
                 "container_id": "tradingview_bg",
-                "hide_volume": true,
-                "disabled_features": [
-                    "header_widget",
-                    "left_toolbar",
-                    "control_bar",
-                    "timeframes_toolbar"
-                ]
+                "hide_volume": true
             });
             </script>
         </div>
@@ -275,11 +308,6 @@
 
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
-
-    <nav>
-        <div class="logo">QuantForge.IO</div>
-        <div style="color: #a1a1aa; font-weight: 300; font-size: 0.9rem; border: 1px solid var(--glass-border); padding: 5px 15px; border-radius: 20px;">v1.0.0 Alpha</div>
-    </nav>
 
     <section class="hero">
         <h1>Precision <br> in Every Trade.</h1>
