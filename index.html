@@ -28,23 +28,35 @@
             min-height: 100vh;
         }
 
-        /* --- چارت پس‌زمینه دقیقاً فیکس صفحه شد --- */
+        /* --- حل مشکل بیرون زدن چارت در دسکتاپ --- */
         .chart-bg {
             position: fixed;
-            top: 0; /* صفر شد تا از بالا دقیق شروع شود */
-            left: 0; /* صفر شد تا نوار قیمت سمت راست کامل دیده شود */
-            width: 100vw; /* دقیقاً هم‌عرض صفحه */
-            height: 100vh; /* دقیقاً هم‌ارتفاع صفحه برای دیدن نوار زمان در پایین */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%; /* استفاده از درصد به جای vw */
+            height: 100%; /* استفاده از درصد به جای vh */
             z-index: -4;
             opacity: 0.85; 
-            pointer-events: none; /* تا موس روی چارت گیر نکنه */
+            pointer-events: none;
+            overflow: hidden; /* جلوگیری از هرگونه بیرون‌زدگی */
         }
 
-        .tradingview-widget-container, 
-        #tradingview_bg {
-            width: 100% !important;
-            height: 100% !important;
+        /* استفاده از Flexbox برای فیکس کردن دقیق فریم TradingView */
+        .tradingview-widget-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
         }
+
+        #tradingview_bg {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+        }
+        /* ---------------------------------------- */
 
         .orb {
             position: absolute;
