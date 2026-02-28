@@ -278,32 +278,9 @@
             <div id="tradingview_bg"></div>
             <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
             <script type="text/javascript">
-                // لیست ۵۰ دارایی استراتژیک (طلا/نقره با OANDA، فارکس با FXCM، کریپتو با BINANCE)
-                const markets = [
-                    /* Metals - OANDA */
-                    { tv: "OANDA:XAUUSD", display: "XAU/USD (Gold)" },
-                    { tv: "OANDA:XAGUSD", display: "XAG/USD (Silver)" },
-                    /* Forex - FXCM */
-                    { tv: "FXCM:EURUSD", display: "EUR/USD" },
-                    { tv: "FXCM:GBPUSD", display: "GBP/USD" },
-                    { tv: "FXCM:USDJPY", display: "USD/JPY" },
-                    { tv: "FXCM:AUDUSD", display: "AUD/USD" },
-                    { tv: "FXCM:USDCAD", display: "USD/CAD" },
-                    { tv: "FXCM:USDCHF", display: "USD/CHF" },
-                    { tv: "FXCM:NZDUSD", display: "NZD/USD" },
-                    { tv: "FXCM:EURGBP", display: "EUR/GBP" },
-                    { tv: "FXCM:EURJPY", display: "EUR/JPY" },
-                    { tv: "FXCM:GBPJPY", display: "GBP/JPY" },
-                    { tv: "FXCM:AUDJPY", display: "AUD/JPY" },
-                    { tv: "FXCM:EURCHF", display: "EUR/CHF" },
-                    { tv: "FXCM:GBPCHF", display: "GBP/CHF" },
-                    { tv: "FXCM:EURAUD", display: "EUR/AUD" },
-                    { tv: "FXCM:GBPAUD", display: "GBP/AUD" },
-                    { tv: "FXCM:AUDNZD", display: "AUD/NZD" },
-                    { tv: "FXCM:CADJPY", display: "CAD/JPY" },
-                    { tv: "FXCM:NZDJPY", display: "NZD/JPY" },
-                    { tv: "FXCM:CHFJPY", display: "CHF/JPY" },
-                    /* Crypto - BINANCE */
+                
+                // لیست ۱: ارزهای دیجیتال (۲۴ ساعته و ۷ روز هفته باز هستند)
+                const cryptoMarkets = [
                     { tv: "BINANCE:BTCUSDT", display: "BTC/USDT" },
                     { tv: "BINANCE:ETHUSDT", display: "ETH/USDT" },
                     { tv: "BINANCE:SOLUSDT", display: "SOL/USDT" },
@@ -335,13 +312,64 @@
                     { tv: "BINANCE:GALAUSDT", display: "GALA/USDT" }
                 ];
 
-                // انتخاب یک مارکت تصادفی از لیست ۵۰ تایی
-                const randomMarket = markets[Math.floor(Math.random() * markets.length)];
+                // لیست ۲: فارکس و فلزات گران‌بها (فقط ۵ روز هفته باز هستند)
+                const forexMetalsMarkets = [
+                    { tv: "OANDA:XAUUSD", display: "XAU/USD (Gold)" },
+                    { tv: "OANDA:XAGUSD", display: "XAG/USD (Silver)" },
+                    { tv: "FXCM:EURUSD", display: "EUR/USD" },
+                    { tv: "FXCM:GBPUSD", display: "GBP/USD" },
+                    { tv: "FXCM:USDJPY", display: "USD/JPY" },
+                    { tv: "FXCM:AUDUSD", display: "AUD/USD" },
+                    { tv: "FXCM:USDCAD", display: "USD/CAD" },
+                    { tv: "FXCM:USDCHF", display: "USD/CHF" },
+                    { tv: "FXCM:NZDUSD", display: "NZD/USD" },
+                    { tv: "FXCM:EURGBP", display: "EUR/GBP" },
+                    { tv: "FXCM:EURJPY", display: "EUR/JPY" },
+                    { tv: "FXCM:GBPJPY", display: "GBP/JPY" },
+                    { tv: "FXCM:AUDJPY", display: "AUD/JPY" },
+                    { tv: "FXCM:EURCHF", display: "EUR/CHF" },
+                    { tv: "FXCM:GBPCHF", display: "GBP/CHF" },
+                    { tv: "FXCM:EURAUD", display: "EUR/AUD" },
+                    { tv: "FXCM:GBPAUD", display: "GBP/AUD" },
+                    { tv: "FXCM:AUDNZD", display: "AUD/NZD" },
+                    { tv: "FXCM:CADJPY", display: "CAD/JPY" },
+                    { tv: "FXCM:NZDJPY", display: "NZD/JPY" },
+                    { tv: "FXCM:CHFJPY", display: "CHF/JPY" }
+                ];
 
-                // آپدیت کردن متن نشانگر لایو در منوی بالا
+                // سیستم هوشمند بررسی زمان باز بودن بازار فارکس (بر اساس تایم زون UTC)
+                function isForexMarketOpen() {
+                    const now = new Date();
+                    const day = now.getUTCDay(); // 0: یکشنبه, 1: دوشنبه ... 6: شنبه
+                    const hour = now.getUTCHours();
+
+                    // شنبه‌ها بازار کاملا بسته است
+                    if (day === 6) return false;
+                    
+                    // یکشنبه‌ها تا ساعت ۲۲:۰۰ (به وقت جهانی) بسته است
+                    if (day === 0 && hour < 22) return false;
+                    
+                    // جمعه‌ها بعد از ساعت ۲۲:۰۰ (به وقت جهانی) بسته است
+                    if (day === 5 && hour >= 22) return false;
+                    
+                    return true;
+                }
+
+                // انتخاب لیست نهایی بر اساس وضعیت بازار
+                let activeMarkets = cryptoMarkets; // کریپتو همیشه هست
+                
+                // اگر بازار فارکس باز بود، لیست فارکس و فلزات رو هم به کریپتو اضافه کن
+                if (isForexMarketOpen()) {
+                    activeMarkets = activeMarkets.concat(forexMetalsMarkets);
+                }
+
+                // انتخاب رندوم از لیست نهایی
+                const randomMarket = activeMarkets[Math.floor(Math.random() * activeMarkets.length)];
+
+                // آپدیت بج بالای سایت
                 document.getElementById('live-symbol-badge').innerText = 'LIVE: ' + randomMarket.display;
 
-                // ساخت چارت با نماد انتخاب شده
+                // ساخت چارت
                 new TradingView.widget({
                     "autosize": true,
                     "symbol": randomMarket.tv,
